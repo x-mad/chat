@@ -1,0 +1,77 @@
+html, body {
+  height:100%;
+}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  height:100%;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height:100%;
+}
+.message-list{
+  flex:1;
+}
+.input-group {
+  display: flex;
+  height: 35px;
+}
+.input-group input {
+  padding:10px;
+}
+.input-nickname {
+  width: 170px;
+}
+.input-message {
+  flex: 1;
+}
+.btn-send {
+  padding: 0 40px;
+  background-color: #157ffb;
+  color: #fff;
+  border:none;
+}
+
+.message-list {
+  background-color: #f1f1f1;
+  padding:30px;
+  overflow-y: auto;
+}
+.message-list .message {
+  background-color: #fff;
+  border:1px solid #cccccc;
+  width: fit-content;
+  padding: 5px 20px;
+  margin-bottom:20px;
+
+}
+.message-list .message-nickname {
+  font-weight: bold;
+}
+
+.message-list .empty-list-msg {
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.connection-lost {
+  height:100%;
+  width: 100%;
+  justify-content: center;
+  /*align-items: center;*/
+  display: flex;
+  position: absolute;
+  opacity: 0.8;
+  background-color: #ccc;
+}
