@@ -12,7 +12,7 @@ export const initWebsocket = () => {
 export const sendMessage = (message) => {
     return {
         type: SEND_MESSAGE,
-        payload: message
+        payload: {...message, type: 'SEND_MESSAGE'}
     }
 };
 

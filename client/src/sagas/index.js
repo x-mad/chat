@@ -6,8 +6,8 @@ const API_URL = "ws://localhost:8081";
 
 let socket;
 
-function* initWebsocketChannel(socket) {
-    const channel = yield call(createEventChannel, socket);
+function* initWebsocketChannel() {
+    const channel = yield call(createEventChannel);
 
     while (true) {
         const action = yield take(channel);
@@ -34,7 +34,9 @@ function createEventChannel() {
                 emit(recieveMessages(JSON.parse(e.data)));
             };
         }
+        
         createWebsocket();
+        
         return () => {
             socket.close();
         }
@@ -45,13 +47,13 @@ function sendMessage (jsonData) {
     socket.send(JSON.stringify(jsonData));
 }
 
+function* handleSendMessage (action) {
+    yield call(sendMessage, action.payload)
+}
+
 function* handleWebsocketConnection (){
     yield takeEvery(INIT_WEBSOCKET, initWebsocketChannel);
-
-    while (true) {
-        const action = yield take(SEND_MESSAGE);
-        yield fork(sendMessage, {...action.payload, type: 'SEND_MESSAGE'});
-    }
+    yield takeEvery(SEND_MESSAGE, handleSendMessage);
 }
 
 export default function* rootSaga() {
