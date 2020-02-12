@@ -1,48 +1,68 @@
 const WebSocket = require('ws');
 const server = new WebSocket.Server({port: 8081});
 
-const chatRooms = ['blue', 'yellow'];
-const history = {};
-const room = 'blue';
+const chatRooms = {
+    blue: {
+        history: [],
+        clients: []
+    },
+    yellow: {
+        history: [],
+        clients: []
+    }
+};
+
 const historyLatestMsgCount = 10;
 
-chatRooms.forEach( function (room) {
-    history[room] = [];
-});
-
 function sendMessage (client, messages) {
-    const messagesBatch = Array.isArray(messages) ? messages : [messages];
-
     if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify(messagesBatch));
+        client.send(JSON.stringify(messages));
     }
 }
 
-function broadcastMessage(clients, message) {
+function broadcastMessage(clients, messages) {
     clients.forEach(function each(client) {
-        sendMessage(client, message);
+        sendMessage(client, messages);
     });
-
 }
 
 server.on('connection', function connection(ws) {
 
-    ws.on('message', function incoming(data) {
-        let message = JSON.parse(data);
-        let {type} = message;
+    ws.on('message', function incoming(actionStr) {
+        let action = JSON.parse(actionStr);
+        let room;
+        let message;
 
-        message.time = Date.now();
-        delete message.type;
-
-        switch (type) {
+        switch (action.type) {
+            case 'ACTIVE_ROOM' :
+                room = action.payload;
+                chatRooms[room].clients.push(ws);
+                break;
+            
             case 'LOAD_HISTORY':
-                sendMessage(ws, history[room].slice(-historyLatestMsgCount));
+                room = action.payload;
+
+                sendMessage(ws, {
+                    type    : 'RECIEVE_MESSAGES',
+                    payload : chatRooms[room].history.slice(-historyLatestMsgCount)
+                });
+                
                 break;
 
+            case 'LOAD_ROOMS' :
+                sendMessage(ws, {...action, payload: chatRooms});
+                break;
+            
             case 'SEND_MESSAGE':
-                history[room].push(message);
+                room = action.room;
+                message = {...action.payload, time: Date.now()};
 
-                broadcastMessage(server.clients, message);
+                chatRooms[room].history.push(message);
+
+                broadcastMessage(chatRooms[room].clients, {
+                    type    : 'RECIEVE_MESSAGES',
+                    payload : [message]
+                });
                 break;
         }
     });

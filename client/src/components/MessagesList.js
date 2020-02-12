@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import _ from 'lodash';
 
 class MessagesList extends Component {
     render () {
         const {messages, connection} = this.props;
-        let content;
+        let content = '';
 
         if (messages) {
             if (messages.length) {
@@ -13,19 +12,25 @@ class MessagesList extends Component {
             } else if (connection){
                 content = <div className="empty-list-msg">No any messages yet</div>;
             }
-        } else {
-            content = <div className="empty-list-msg">Loading...</div>;
+        // } else {
+        //     // content = <div className="empty-list-msg">Loading...</div>;
         }
 
         return (
             <div className="message-list" ref="messageList">
+                {this.renderRoomBadge()}
                 {content}
             </div>
         )
     }
 
+    renderRoomBadge () {
+        const {activeRoom} = this.props;
+        return activeRoom ? <div className="room-badge">{activeRoom}</div>: '';
+    }
+
     renderMessages () {
-        return _.map(this.props.messages, message => {
+        return this.props.messages.map( message => {
                 return (
                     <div className="message" key={message.time}>
                         <div className="message-nickname">{message.nickname}</div>
@@ -45,8 +50,8 @@ class MessagesList extends Component {
     }
 }
 
-function mapStateToProps ({messages, connection}) {
-    return {messages, connection};
+function mapStateToProps ({messages, connection, activeRoom}) {
+    return {messages, connection, activeRoom};
 }
 
 export default connect(mapStateToProps)(MessagesList);

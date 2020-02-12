@@ -65,13 +65,38 @@ body {
   justify-content: center;
   align-items: center;
 }
-.connection-lost {
+.overlay {
   height:100%;
   width: 100%;
   justify-content: center;
-  /*align-items: center;*/
+  align-items: center;
   display: flex;
   position: absolute;
   opacity: 0.8;
   background-color: #ccc;
+}
+.room-selector {
+  display: block;
+  width:300px;
+  height:auto;
+  background-color: #bbb;
+  text-align: center;
+  padding:20px;
+  position: absolute;
+  top: calc(50vh - 90px);
+  left: calc(50% - 150px);
+  box-sizing: border-box;
+}
+.room-selector .room {
+  line-height: 40px;
+}
+.room-selector .room:hover {
+  background-color: #eee;
+}
+.room-badge{
+  position: absolute;
+  top: 10px;
+  right: 25px;
+  border: 1px solid #ccc;
+  padding: 10px;
 }

@@ -1,10 +1,11 @@
-import {takeEvery, put, call, take, fork} from 'redux-saga/effects';
+import {takeEvery, put, call, take, select} from 'redux-saga/effects';
 import {eventChannel} from 'redux-saga';
-import {INIT_WEBSOCKET, SEND_MESSAGE, recieveMessages, changeWebsocketStatus} from '../actions';
+import * as ActionCreator from '../actions';
 
 const API_URL = "ws://localhost:8081";
 
-let socket;
+let socket,
+    activeRoom;
 
 function* initWebsocketChannel() {
     const channel = yield call(createEventChannel);
@@ -15,23 +16,31 @@ function* initWebsocketChannel() {
     }
 }
 
+function* getActiveRoom () {
+    const room = yield select(state => state.activeRoom);
+    return room;
+}
+
 function createEventChannel() {
     return eventChannel(emit => {
         function createWebsocket() {
             socket = new WebSocket(API_URL);
 
             socket.onopen = () => {
-                sendMessage({type: 'LOAD_HISTORY'});
-                emit(changeWebsocketStatus(true));
+                activeRoom ?
+                    sendMessage(ActionCreator.setActiveRoom(activeRoom)) :
+                    sendMessage(ActionCreator.loadRooms());
+
+                emit(ActionCreator.changeWebsocketStatus(true));
             };
 
             socket.onclose = () => {
-                emit(changeWebsocketStatus(false));
+                emit(ActionCreator.changeWebsocketStatus(false));
                 setTimeout(() => {createWebsocket()}, 2000);
             };
 
             socket.onmessage = e => {
-                emit(recieveMessages(JSON.parse(e.data)));
+                emit(JSON.parse(e.data));
             };
         }
         
@@ -48,12 +57,20 @@ function sendMessage (jsonData) {
 }
 
 function* handleSendMessage (action) {
-    yield call(sendMessage, action.payload)
+    const room = yield getActiveRoom();
+    yield call(sendMessage, {...action, room});
+}
+
+function* handleSetActiveRoom(action) {
+    activeRoom = action.payload;
+    yield call(sendMessage, action);
+    yield call(sendMessage, ActionCreator.loadHistory(action.payload))
 }
 
 function* handleWebsocketConnection (){
-    yield takeEvery(INIT_WEBSOCKET, initWebsocketChannel);
-    yield takeEvery(SEND_MESSAGE, handleSendMessage);
+    yield takeEvery(ActionCreator.INIT_WEBSOCKET, initWebsocketChannel);
+    yield takeEvery(ActionCreator.ACTIVE_ROOM, handleSetActiveRoom);
+    yield takeEvery(ActionCreator.SEND_MESSAGE, handleSendMessage);
 }
 
 export default function* rootSaga() {
