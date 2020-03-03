@@ -19,20 +19,20 @@ class InputBar extends Component {
     render () {
         return (
 
-            <form onSubmit={this.onSubmit} action="" className="input-group">
+            <form onSubmit={this.onSubmit} action="" className="input-form">
                 <input type="text"
                        placeholder="Nickname"
-                       className="input-nickname"
+                       className="input input-form__nickname"
                        onChange={this.onNicknameChange}
                        value={this.state.nickname}
                 />
                 <input type="text"
                        placeholder="Message"
-                       className="input-message"
+                       className="input input-form__message"
                        onChange={this.onMessageChange}
                        value={this.state.text}
                 />
-                <button type="submit" className="btn-send">
+                <button type="submit" className="input-form__btn-send">
                     Send
                 </button>
             </form>

@@ -19,52 +19,55 @@ body {
   flex-direction: column;
   height:100%;
 }
-.message-list{
-  flex:1;
-}
-.input-group {
+.input-form {
   display: flex;
   height: 35px;
+
+  &__nickname {
+    width: 170px;
+  }
+  &__message {
+    flex: 1;
+  }
+  &__btn-send {
+    padding: 0 40px;
+    background-color: #157ffb;
+    color: #fff;
+    border:none;
+  }
+
 }
-.input-group input {
+.input {
   padding:10px;
-}
-.input-nickname {
-  width: 170px;
-}
-.input-message {
-  flex: 1;
-}
-.btn-send {
-  padding: 0 40px;
-  background-color: #157ffb;
-  color: #fff;
-  border:none;
 }
 
 .message-list {
   background-color: #f1f1f1;
   padding:30px;
   overflow-y: auto;
+  flex:1;
+
+  &__empty-list-msg {
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+
 }
-.message-list .message {
+.message {
   background-color: #fff;
   border:1px solid #cccccc;
   width: fit-content;
   padding: 5px 20px;
   margin-bottom:20px;
 
-}
-.message-list .message-nickname {
-  font-weight: bold;
+  &__nickname {
+    font-weight: bold;
+  }
+
 }
 
-.message-list .empty-list-msg {
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-}
 .overlay {
   height:100%;
   width: 100%;
@@ -86,12 +89,14 @@ body {
   top: calc(50vh - 90px);
   left: calc(50% - 150px);
   box-sizing: border-box;
-}
-.room-selector .room {
-  line-height: 40px;
-}
-.room-selector .room:hover {
-  background-color: #eee;
+
+  &__room {
+    line-height: 40px;
+  }
+  &__room:hover {
+    background-color: #eee;
+  }
+
 }
 .room-badge{
   position: absolute;

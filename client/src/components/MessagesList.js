@@ -10,7 +10,7 @@ class MessagesList extends Component {
             if (messages.length) {
                 content = this.renderMessages();
             } else if (connection){
-                content = <div className="empty-list-msg">No any messages yet</div>;
+                content = <div className="message-list__empty-list-msg">No any messages yet</div>;
             }
         // } else {
         //     // content = <div className="empty-list-msg">Loading...</div>;
@@ -33,8 +33,8 @@ class MessagesList extends Component {
         return this.props.messages.map( message => {
                 return (
                     <div className="message" key={message.time}>
-                        <div className="message-nickname">{message.nickname}</div>
-                        <div className="message-text">{message.text}</div>
+                        <div className="message__nickname">{message.nickname}</div>
+                        <div className="message__text">{message.text}</div>
                     </div>
                 )
             })

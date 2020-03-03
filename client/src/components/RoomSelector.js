@@ -19,7 +19,7 @@ class RoomSelector extends Component {
             return 'Loading rooms...';
 
         return Object.keys(rooms).map( room => {
-            return <div className="room" key={room} onClick={this.onRoomSelect.bind(this, room)}>{room}</div>
+            return <div className="room-selector__room" key={room} onClick={this.onRoomSelect.bind(this, room)}>{room}</div>
         });
     }
 
